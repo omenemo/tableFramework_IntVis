@@ -77,7 +77,6 @@ function closeFullscreen() {
   }
 } 
 
-
 function init(){
 
 }
@@ -141,7 +140,7 @@ function preload() {
 		// console.log('new client connected id:' + data.id) 
 	}) 
 	
-	myFont = loadFont('assets/Futura-Lig.otf')
+	myFont = loadFont('assets/AkkStdRg.otf')
 	openFullscreen()
 	init()
 
@@ -256,10 +255,10 @@ function draw() {
   	background(bckColor) 
 	let user = createVector(mouseX,mouseY)
 	show3D()
-	show2d() 
+	// show2d()
 	showPointsOfInterest(cities.length-2)
 	showFlatMap(pointsEarth, color(0,255,0))
-	showVectorMap(pointsEarth,screenPointsEarth,color(255,255,255))
+	// showVectorMap(pointsEarth,screenPointsEarth,color(255,255,255)) // draw  vector map
 	easycam.setCenter([0,0,0],0.0)
 }
 
@@ -278,25 +277,25 @@ function showFlatPointsOfInterest(){
 //   return false;
 // }
 
-function show3D(){
+function show3D(){  // display function for 3d globe
 	if(threeDviewFlag){
 		ambientLight(60, 60, 60) 
  		let v1 = easycam.getPosition(500) 
-	 	pointLight(255,255, 255, v1[0], v1[1]+300, v1[2]) 
-	 	pointLight(255, 255, 255, v1[0], v1[1]+300, v1[2]) 
-	  	texture(earthImg)
-	  	noStroke()
+	 	pointLight(255,255, 255, v1[0], v1[1]+300, v1[2])
+	 	pointLight(255, 255, 255, v1[0], v1[1]+300, v1[2])
+	  	texture(earthImg) // mapped earth image
+	  	//noStroke()
 	  	// rotating earth in order to match coordinate system location
 	  	push()
-	  	rotateX(radians(rMX)) 
+	  	rotateX(radians(rMX))
 	  	rotateY(radians(rMY))
 	  	rotateZ(radians(rMZ))
 	  	// fill(0,0,100)
 	  	// drawing EARTH Polygon
-	  	sphere(r,20,20)
+		sphere(r,20,20)
 	  	pop()
 		noLights() 
-	 	ambientLight(255, 255, 255) 
+	 	ambientLight(255, 255, 255)
 	  	// texture(sky) 
 	  	noStroke() 
 	  	fill(30,30,30)
@@ -307,7 +306,7 @@ function show3D(){
 		for(let i = 0; i <400; i++){
 
 			// rename to : pOIx, pOIy, pOIz
-			// drawLine(-pOI[i].x,pOI[i].y,pOI[i].z,-pOI2[i].x,pOI2[i].y,pOI2[i].z,0,0,255) 
+			drawLine(-pOI[i].x,pOI[i].y,pOI[i].z,-pOI2[i].x,pOI2[i].y,pOI2[i].z,0,0,255)
 		}
 		drawLine(-tPS.x,tPS.y,tPS.z,-tPE.x,tPE.y,tPE.z,0,255,0)
 
@@ -537,7 +536,12 @@ function fastDist(  ax, ay,  az, bx, by, bz )
   // fdist = fdist
   return fdist
 }
-// rename this function - show Points Of Interest
+
+function drawW(pepeppp ) {
+	console.log(pepeppp);
+}
+
+// show Points Of Interest Hover / Click GUI
 function showPointsOfInterest(amount){
 	if(pOIFlag){
 		let testPoints = []
@@ -553,19 +557,31 @@ function showPointsOfInterest(amount){
 			user = createVector (touchX - windowWidth/2 , touchY - windowHeight/2 )
 		}
 		// similar to pushMatrix()
-		easycam.beginHUD()
+		easycam.beginHUD() // Gui Window
 			for(let i = 0; i < amount;i++){
-				if(user.dist(testPoints[i])<10){
-					fill(255,180,255)
+				if(user.dist(testPoints[i])<5){ // Collisiond detection parameter
+
+					/*// Gui Window
+					fill(0,0,0)
+					stroke(255,255,255)
+					strokeWeight(3)
+					rect(testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 - 20, 300, 50)*/
+
+					let myWindow1 = new myWindow(testPoints[i].x + windowWidth / 2 + 10, testPoints[i].y + windowHeight / 2 -27, 360, 50)
+					myWindow1.render()
+
+					fill(255,255,255)
 					noStroke()
 					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 15)
 					let lat = Math.asin(pOI[i].z / r )
 					let lon = Math.atan2(pOI[i].y, pOI[i].x)
 					lat = lat * 180 / Math.PI
 					lon = lon * 180 / Math.PI
-					textSize(12)
+					textSize(12) //
 					let latLon = 'lat : ' + lat.toFixed(3) + ' , lon : '+ lon.toFixed(3);
-					text( cities[i+1]  + " , " + latLon ,testPoints[i].x + windowWidth/2 + 10, testPoints[i].y + windowHeight/2 + 5 )
+					textSize (20)
+					text( cities[i+1]  + " , " + latLon ,testPoints[i].x + windowWidth/2 + 20, testPoints[i].y + windowHeight/2 + 5 )
+
 				}else{
 					fill(200,180,200)
 					noStroke()
@@ -573,7 +589,7 @@ function showPointsOfInterest(amount){
 				}
 			}
 			fill(255,100,100) // red points
-			if(user.dist(tZurich)<25){
+			/*if(user.dist(tZurich)<25){
 				let lat = Math.asin(zurich.z / r)
 				let lon = Math.atan2(zurich.y,zurich.x)
 				lat = lat * 180 / PI
@@ -582,13 +598,13 @@ function showPointsOfInterest(amount){
 				let latLon = 'ZURICH, LAT : ' + lat.toFixed(3) + ' , LON : '+ lon.toFixed(3) + ' , Z pos : ' + tZurich.z
 				if(mouseX>windowWidth/2){
 					text( latLon ,tZurich.x + windowWidth/2 - 240, tZurich.y + windowHeight/2 + 25 )
-				}else{
+				}	else{
 					text( latLon ,tZurich.x + windowWidth/2 + 20, tZurich.y + windowHeight/2 + 25 )
 				}
 				circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,25)
-			}else{
+			}	 else{
 				circle(tZurich.x + windowWidth/2,tZurich.y + windowHeight/2,15)
-			}
+			} */
 			fill(100,100,255)
 			circle(tCDMX.x + windowWidth/2,tCDMX.y + windowHeight/2,5)
 		// popMatrix()
@@ -608,7 +624,6 @@ function drawLine(x1, y1, z1, x2, y2, z2, r,g,b){
   	endShape() 
 	noStroke() 
 }
-
 
 function loadData(path) {
 
@@ -642,6 +657,32 @@ function loadData(path) {
 
 
 //  ****** Classes ******
+
+
+class myWindow {
+	constructor(x,y,w,h)
+	{
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+
+		//rect(testPoints[i].x + windowWidth / 2 - 20, testPoints[i].y + windowHeight / 2 - 10, 300, 50)
+	}
+
+	move(newX, newY) {
+		this.x = newX;
+		this.y = newY;
+	}
+
+	render() {
+		// Gui Window
+		fill(0, 0, 0)
+		stroke(255, 255, 255)
+		strokeWeight(3)
+		rect(this.x, this.y, this.w, this.h)
+	}
+}
 
 class pointOfInterest {
 	constructor(x,y,z,place){
