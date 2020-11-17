@@ -9,7 +9,6 @@
 // https://www.keene.edu/campus/maps/tool/ -> drawing earth maps and converting them into latitude longitude
 
 
-
 let earthImg 
 let sky 
 let theta = 0.001 
@@ -108,11 +107,6 @@ function handleMove(evt) {
 	touchY = evt.changedTouches[0].pageY
 }
 
-
-
-
-
-
 function ongoingTouchIndexById(idToFind) {
   for (var i = 0; i < ongoingTouches.length; i++) {
     var id = ongoingTouches[i].identifier
@@ -136,8 +130,6 @@ function getRandomColor(){
     return "rgb("+rgb1 +","+rgb2 + ","+rgb3 +")"
 }
 
-
-
 function preload() {
   	earthImg = loadImage('../imgs/earth_min_black.jpg') 
 	sky = loadImage('../imgs/sky.jpg') 
@@ -154,7 +146,6 @@ function preload() {
 	init()
 
 }
-
 
 function setup() {
 	canvas = createCanvas(windowWidth, windowHeight, WEBGL) 
@@ -259,8 +250,6 @@ function setup() {
 	listenMessages()
 
 	// tableControl = new CenterControl(320,475)
-
-	
 }
 
 function draw() {
@@ -272,7 +261,6 @@ function draw() {
 	showFlatMap(pointsEarth, color(0,255,0))
 	showVectorMap(pointsEarth,screenPointsEarth,color(255,255,255))
 	easycam.setCenter([0,0,0],0.0)
-
 }
 
 function showFlatPointsOfInterest(){
@@ -343,6 +331,7 @@ function keyTyped(){
 		flatMapFlag = !flatMapFlag
 	}
 }
+
 function windowResized() {
   	resizeCanvas(windowWidth, windowHeight,true)
   	if(easycamIntialized){
@@ -451,12 +440,7 @@ function setMap(map, mapPoints, screenMapPoints){
 		let screenPoint = screenPosition(-point.x,point.y,point.z)
 		let screen2DVector = createVector(screenPoint.x,screenPoint.y)
 		screenMapPoints.push(screen2DVector)
-				
-
 	}
-
-	
-
 }
 
 let deltas = []
@@ -588,7 +572,7 @@ function showPointsOfInterest(amount){
 					circle(testPoints[i].x + windowWidth/2, testPoints[i].y + windowHeight/2, 2)
 				}
 			}
-			fill(255,100,100)
+			fill(255,100,100) // red points
 			if(user.dist(tZurich)<25){
 				let lat = Math.asin(zurich.z / r)
 				let lon = Math.atan2(zurich.y,zurich.x)
@@ -829,12 +813,10 @@ class Label{
 			}
 		}
 		this.opacity = map(this.count,0,30,0,255)
-		if(!this.labelOff){
+		if(!this.labelOff) {
 			this.show()
 		}
-		
 		this.oldRotation = this.rotation
-
 	}
 
 	show(){
@@ -846,9 +828,8 @@ class Label{
 			"DESIGN ... TECHNOLOGY ... THINKING ... CONCEIVING ...  DOING ...  ",
 			"PROTOTYPING"
 		]
+
 		let peak = 10
-		
-		
 		let offX=120
 		let offY=0
 		push()
@@ -875,8 +856,3 @@ class Label{
 
 	}
 }
-
-
-
-
-
